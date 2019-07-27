@@ -20,11 +20,24 @@ class Books extends Component {
   }
 
   loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-      )
+// kk todo
+    API.search("forrest+gump")
+      .then(res => {
+        if (res.data.Error) {
+          this.setState({ result: null })
+        } else {
+          console.log(res.data);
+          this.setState({ result: res.data })
+        }
+      })
       .catch(err => console.log(err));
+
+    // API.getBooks()
+    //   .then(res => {
+    //     console.log(res.data);
+    //     this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+    //   })
+    //   .catch(err => console.log(err));
   };
 
   deleteBook = id => {

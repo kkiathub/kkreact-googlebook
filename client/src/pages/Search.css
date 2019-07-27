@@ -1,0 +1,15 @@
+.search-result {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+}
+
+.search-book {
+    border: 2px solid darkslategray;
+    border-radius: 5px;
+}
+
+.group-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}

@@ -1,0 +1,22 @@
+body {
+  background-image: url("./bg.jpg");
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding-bottom: 55px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(186, 207, 231, 0.8);
+  text-align: center;
+}
+
+footer p {
+  margin: 0px;
+  padding: 10px 0;
+}
+
