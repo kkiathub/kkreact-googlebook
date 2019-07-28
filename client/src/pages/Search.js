@@ -10,12 +10,10 @@ import "./Search.css";
 class Books extends Component {
   state = {
     books: [],
-    keyword: "",
-
+    keyword: ""
   };
 
   saveBook = bookRec => {
-    console.log("saving... ");
     API.saveBook({
       title: bookRec.title,
       author: JSON.stringify(bookRec.author),
@@ -44,7 +42,6 @@ class Books extends Component {
         if (res.data.Error) {
           this.setState({ books: null })
         } else {
-          console.log(res.data);
           var bookData = res.data.items;
           var books = [];
           for (var i = 0; i < bookData.length; i++) {
@@ -62,7 +59,7 @@ class Books extends Component {
 
             books.push(book);
           }
-          this.setState({ books: books })
+          this.setState({ books: books, keyword: "" });
         }
       })
       .catch(err => console.log(err));
