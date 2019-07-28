@@ -4,6 +4,7 @@ import { ViewBtn, SaveBtn } from "../components/Button";
 import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, FormBtn } from "../components/Form";
+// import io from 'socket.io-client';
 
 import "./Search.css";
 
@@ -14,14 +15,22 @@ class Books extends Component {
   };
 
   saveBook = bookRec => {
+    // var socket = io("http://localhost:3000", { forceNew: false });
+
+    //     socket.emit('book saved', bookRec.title);
     API.saveBook({
+      bookId: bookRec.id,
       title: bookRec.title,
       author: JSON.stringify(bookRec.author),
       description: bookRec.description,
       link: bookRec.link,
       image: bookRec.image
     })
-      .then(res => console.log(res))
+      .then(res => {
+        // var socket = io();
+        // socket.emit('book added', bookRec.title);
+        console.log(res)
+      })
       .catch(err => console.log(err));
   };
 
@@ -43,27 +52,26 @@ class Books extends Component {
           this.setState({ books: null })
         } else {
           var bookData = res.data.items;
-          var books = [];
           for (var i = 0; i < bookData.length; i++) {
-            var book = {
-              id: bookData[i].id,
-              title: bookData[i].volumeInfo.title,
-              author: bookData[i].volumeInfo.authors,
-              description: bookData[i].volumeInfo.description,
-              link: bookData[i].volumeInfo.infoLink
-            };
-            if (bookData[i].volumeInfo.imageLinks)
-              book.image = bookData[i].volumeInfo.imageLinks.thumbnail;
-            else
-              book.image = process.env.PUBLIC_URL + "/images/placeholder.png"
-
-            books.push(book);
+            if (!bookData[i].image) {
+              console.log("no image "+ i);
+              bookData[i].image = process.env.PUBLIC_URL + "/images/placeholder.png"
+            }
           }
-          this.setState({ books: books, keyword: "" });
+          this.setState({ books: bookData, keyword: "" });
         }
       })
       .catch(err => console.log(err));
   };
+
+  renderSaveButton(book, obj) {
+    if (book.saved) {
+      return <button type="button" className="btn btn-secendary" disabled >Saved</button>
+
+    } else {
+      return <SaveBtn onClick={() => obj.saveBook(book)} />
+    }
+  }
 
   render() {
     var resultStr = "";
@@ -113,12 +121,13 @@ class Books extends Component {
                 <Row>
                   <Col size="md-9">
                     <h4>🕮 {book.title}</h4>
-                    <h5>{book.author?("Written By "+book.author):"No author available"}</h5>
+                    <h5>{book.author ? ("Written By " + book.author) : "No author available"}</h5>
                   </Col>
                   <Col size="md-3">
                     <div className="group-button">
                       <ViewBtn onClick={() => window.open(book.link, "_blank")} />
-                      <SaveBtn onClick={() => this.saveBook(book)} />
+                      {this.renderSaveButton(book, this)}
+                      {/* <SaveBtn onClick={() => this.saveBook(book)} /> */}
                     </div>
                   </Col>
                 </Row>
@@ -127,7 +136,7 @@ class Books extends Component {
                     <img src={book.image} className="book-img" alt="..." />
                   </Col>
                   <Col size="md-10">
-                    <p>{book.description?book.description:"No discription available."}</p>
+                    <p>{book.description ? book.description : "No discription available."}</p>
                   </Col>
                 </Row>
               </div>
