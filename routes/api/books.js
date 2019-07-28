@@ -10,7 +10,6 @@ router.route("/")
 router
   .route("/:id")
   .get(booksController.search)
-  // .put(booksController.update)
   .delete(booksController.remove);
 
 module.exports = router;
