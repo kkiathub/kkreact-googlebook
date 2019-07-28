@@ -14,3 +14,9 @@ export function SaveBtn(props) {
     <button type="button" className="btn btn-primary" {...props} >Save</button>
   );
 }
+
+export function DeleteBtn(props) {
+  return (
+    <button type="button" className="btn btn-primary" {...props} >Delete</button>
+  );
+}

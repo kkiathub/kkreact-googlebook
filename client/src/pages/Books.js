@@ -1,18 +1,14 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
-import Jumbotron from "../components/Jumbotron";
+import { DeleteBtn, ViewBtn } from "../components/Button";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+
+import "./Search.css";
+
 
 class Books extends Component {
   state = {
     books: [],
-    title: "",
-    author: "",
-    synopsis: ""
   };
 
   componentDidMount() {
@@ -20,24 +16,26 @@ class Books extends Component {
   }
 
   loadBooks = () => {
-// kk todo
-    API.search("forrest+gump")
+    API.getBooks()
       .then(res => {
-        if (res.data.Error) {
-          this.setState({ result: null })
-        } else {
-          console.log(res.data);
-          this.setState({ result: res.data })
+        // console.log(res.data);
+        var bookArr = [];
+        for(var i=0; i<res.data.length; i++) {
+          var book = {
+            id : res.data[i]._id,
+            title : res.data[i].title,
+            link : res.data[i].link,
+            image : res.data[i].image
+          }
+          book.description = ( res.data[i].description)?res.data[i].description:"No description available."
+          if (res.data[i].author)
+            book.author = JSON.parse(res.data[i].author);
+          bookArr.push(book);
         }
+
+        this.setState({ books: bookArr });
       })
       .catch(err => console.log(err));
-
-    // API.getBooks()
-    //   .then(res => {
-    //     console.log(res.data);
-    //     this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-    //   })
-    //   .catch(err => console.log(err));
   };
 
   deleteBook = id => {
@@ -46,83 +44,44 @@ class Books extends Component {
       .catch(err => console.log(err));
   };
 
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
-  };
-
-  handleFormSubmit = event => {
-    event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
-  };
-
   render() {
+    var resultStr = "";
+    if (this.state.books.length===0) {
+      resultStr = "No book saved."
+    } else {
+      resultStr = this.state.books.length + (this.state.books.length>1?" books saved.":" book saved.");
+    }
     return (
       <Container fluid>
-        <Row>
-          <Col size="md-6">
-            <Jumbotron>
-              <h1>What Books Should I Read?</h1>
-            </Jumbotron>
-            <form>
-              <Input
-                value={this.state.title}
-                onChange={this.handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
-              <FormBtn
-                disabled={!(this.state.author && this.state.title)}
-                onClick={this.handleFormSubmit}
-              >
-                Submit Book
-              </FormBtn>
-            </form>
-          </Col>
-          <Col size="md-6 sm-12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
-            {this.state.books.length ? (
-              <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
-          </Col>
-        </Row>
+        <div className="container-fluid saved-result py-3 mt-3">
+          <h5>{resultStr}</h5>
+          {this.state.books.map(book => (
+            <div className="row px-3" key={book.id}>
+              <div className="col-md-12 search-book my-2 py-2">
+                <Row>
+                  <Col size="md-9">
+                    <h4>🕮 {book.title}</h4>
+                    <h5>{book.author?("Written By "+book.author):"No author available"}</h5>
+                  </Col>
+                  <Col size="md-3">
+                    <div className="group-button">
+                      <ViewBtn onClick={() => window.open(book.link, "_blank")} />
+                      <DeleteBtn onClick={() => this.deleteBook(book.id)} />
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col size="md-2">
+                    <img src={book.image} className="book-img" alt="..." />
+                  </Col>
+                  <Col size="md-10">
+                    <p>{book.description?book.description:"No discription available."}</p>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          ))}
+        </div>
       </Container>
     );
   }

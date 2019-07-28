@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Jumbotron from "../components/Jumbotron";
 import { ViewBtn, SaveBtn } from "../components/Button";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, FormBtn } from "../components/Form";
 
@@ -15,10 +14,17 @@ class Books extends Component {
 
   };
 
-  viewBook = id => {
-  };
-
-  viewBook = id => {
+  saveBook = bookRec => {
+    console.log("saving... ");
+    API.saveBook({
+      title: bookRec.title,
+      author: JSON.stringify(bookRec.author),
+      description: bookRec.description,
+      link: bookRec.link,
+      image: bookRec.image
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
   };
 
   handleInputChange = event => {
@@ -42,7 +48,6 @@ class Books extends Component {
           var bookData = res.data.items;
           var books = [];
           for (var i = 0; i < bookData.length; i++) {
-
             var book = {
               id: bookData[i].id,
               title: bookData[i].volumeInfo.title,
@@ -65,10 +70,10 @@ class Books extends Component {
 
   render() {
     var resultStr = "";
-    var numBooksFound =  this.state.books.length;
-    if (numBooksFound===0)
+    var numBooksFound = this.state.books.length;
+    if (numBooksFound === 0)
       resultStr = "Enter you book title and start searching ...";
-    else if (numBooksFound===1)
+    else if (numBooksFound === 1)
       resultStr = numBooksFound + " book found!";
     else
       resultStr = numBooksFound + " books found!";
@@ -111,12 +116,12 @@ class Books extends Component {
                 <Row>
                   <Col size="md-9">
                     <h4>🕮 {book.title}</h4>
-                    <h5>Written By {book.author}</h5>
+                    <h5>{book.author?("Written By "+book.author):"No author available"}</h5>
                   </Col>
                   <Col size="md-3">
                     <div className="group-button">
-                      <ViewBtn onClick={() => this.viewBook(book.id)} />
-                      <SaveBtn onClick={() => this.saveBook(book.id)} />
+                      <ViewBtn onClick={() => window.open(book.link, "_blank")} />
+                      <SaveBtn onClick={() => this.saveBook(book)} />
                     </div>
                   </Col>
                 </Row>
@@ -125,7 +130,7 @@ class Books extends Component {
                     <img src={book.image} className="book-img" alt="..." />
                   </Col>
                   <Col size="md-10">
-                    <p>{book.description}</p>
+                    <p>{book.description?book.description:"No discription available."}</p>
                   </Col>
                 </Row>
               </div>

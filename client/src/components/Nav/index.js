@@ -21,7 +21,7 @@ function Nav() {
             <a className="nav-link" href="/">Search</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/">Save</a>
+            <a className="nav-link" href="/books">Save</a>
           </li>
         </ul>
       </div>
