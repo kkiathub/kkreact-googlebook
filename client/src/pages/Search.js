@@ -46,19 +46,23 @@ class Books extends Component {
 
     var queryStr = this.state.keyword.replace(/ +/g, "+");
 
-    API.search(queryStr)
+    API.search(queryStr, 0)
       .then(res => {
         if (res.data.Error) {
           this.setState({ books: null })
         } else {
+
           var bookData = res.data.items;
           for (var i = 0; i < bookData.length; i++) {
             if (!bookData[i].image) {
-              console.log("no image "+ i);
+              console.log("no image " + i);
               bookData[i].image = process.env.PUBLIC_URL + "/images/placeholder.png"
             }
           }
-          this.setState({ books: bookData, keyword: "" });
+          this.setState({
+            books: bookData,
+            keyword: ""
+          });
         }
       })
       .catch(err => console.log(err));
@@ -74,14 +78,7 @@ class Books extends Component {
   }
 
   render() {
-    var resultStr = "";
-    var numBooksFound = this.state.books.length;
-    if (numBooksFound === 0)
-      resultStr = "Enter you book title and start searching ...";
-    else if (numBooksFound === 1)
-      resultStr = numBooksFound + " book found!";
-    else
-      resultStr = numBooksFound + " books found!";
+    var resultStr = (this.state.books.length === 0)?"Enter you book title and start searching ...":"Books found!";
 
     return (
       <Container fluid>
@@ -127,7 +124,6 @@ class Books extends Component {
                     <div className="group-button">
                       <ViewBtn onClick={() => window.open(book.link, "_blank")} />
                       {this.renderSaveButton(book, this)}
-                      {/* <SaveBtn onClick={() => this.saveBook(book)} /> */}
                     </div>
                   </Col>
                 </Row>

@@ -8,12 +8,6 @@ const FILTER = "&filter=partial"
 // Defining methods for the booksController
 module.exports = {
   search: function (req, res) {
-    // axios.get(BASEURL + req.params.id + APIKEY + FILTER)
-    //   .then(sData => {
-    //     console.log(sData.data);
-    //      res.json(sData.data)
-    //   })
-    //   .catch(err => res.status(422).json(err));
     var searchData = {};
     axios.get(BASEURL + req.params.id + APIKEY + FILTER)
       .then(sRes => {
@@ -38,8 +32,6 @@ module.exports = {
         return db.Book.find({});
       })
       .then(qRes => {
-        // console.log(searchData.items);
-        // console.log(qRes);
         // check if any search result book is already saved
         for(var i=0; i<qRes.length; i++) {
           for(var j=0; j<searchData.items.length; j++) {
