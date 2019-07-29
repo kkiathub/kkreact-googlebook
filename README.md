@@ -1,7 +1,8 @@
 # Google Book Search
 
 ### Overview
-This is a full-stack website that let you search book of your choice.  You can save books from result and view them later.   
+This is a full-stack website that let you search book of your choice.  You can save books from result and view them later.
+
 ### How to use
     - First, enter your favorite title in the search input box.
     - When the results are displayed, you can choose to view or save it to the database.
@@ -13,6 +14,7 @@ This is a full-stack website that let you search book of your choice.  You can s
     
 ### In the code...
     - We use node.js and javascript in coding.
+    - The React is used to render the front end. 
     - Express package is used to send request and received response.
     - Book data is stored in the database.  We use Mongoose as a database.
     - Axios is used in sending a search request via google book API.
