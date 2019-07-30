@@ -4,7 +4,6 @@ import { ViewBtn, SaveBtn } from "../components/Button";
 import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, FormBtn } from "../components/Form";
-// import io from 'socket.io-client';
 
 import "./Search.css";
 
@@ -15,9 +14,7 @@ class Books extends Component {
   };
 
   saveBook = bookRec => {
-    // var socket = io("http://localhost:3000", { forceNew: false });
 
-    //     socket.emit('book saved', bookRec.title);
     API.saveBook({
       bookId: bookRec.id,
       title: bookRec.title,
@@ -27,9 +24,17 @@ class Books extends Component {
       image: bookRec.image
     })
       .then(res => {
-        // var socket = io();
-        // socket.emit('book added', bookRec.title);
         console.log(res)
+        var tempBook = this.state.books;
+        for (var i = 0; i < tempBook.length; i++) {
+          if (tempBook[i].id === bookRec.id) {
+            tempBook[i].saved = true;
+            break;
+          }
+        }
+        this.setState({
+          books: tempBook
+        });
       })
       .catch(err => console.log(err));
   };

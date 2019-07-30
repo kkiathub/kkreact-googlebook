@@ -31,14 +31,14 @@ app.get("*", function(req, res) {
 });
 
 // io.on('connection', function(socket){
-//   console.log('a user connected');
+//   // console.log('a user connected');
 
 //   socket.on('disconnect', function(){
-//     console.log('user disconnected');
+//     // console.log('user disconnected');
 //   });
-//   socket.on('book saved', function(msg){
+//   socket.on('book added', function(msg){
 //     console.log('book saved: ' + msg);
-//     socket.broadcast.emit("book saved", "Book: " + msg + " is saved.");
+//     socket.broadcast.emit("from server  - book saved", "Book: " + msg + " is saved.");
 //   });
 // });
 
