@@ -2,8 +2,8 @@ import axios from "axios";
 
 export default {
   // search books
-  search: function(query, pageId) {
-    return axios.get("/api/books/" + query + "/"+pageId);
+  search: function(query) {
+    return axios.get("/api/books/" + query);
   },
   // Get all saved books
   getBooks: function() {

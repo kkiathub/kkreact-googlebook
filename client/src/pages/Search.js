@@ -51,7 +51,7 @@ class Books extends Component {
 
     var queryStr = this.state.keyword.replace(/ +/g, "+");
 
-    API.search(queryStr, 0)
+    API.search(queryStr)
       .then(res => {
         if (res.data.Error) {
           this.setState({ books: null })
